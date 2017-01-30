@@ -1,5 +1,5 @@
 /**
- * Created by mlyskawi on 1/29/2017.
+ * Created by Michalos88 on 1/29/2017.
  */
 
 /* Write a program to the screen that operates on the numbers between 74 and 291.
