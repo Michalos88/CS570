@@ -1,5 +1,5 @@
 # JavaScript Projects
-Collection of my projcects in JavaScript:
+Collection of my projects in JavaScript:
 
 1. FizzBuzz
 2. Ceasar's Cipher
