@@ -1,0 +1,481 @@
+/**
+ * Created by Michalos88 on 2/22/2017.
+ */
+ 
+//Importing
+let fs = require("fs");
+let path = require("path");
+let readline = require("readline");
+
+// Defining functions
+function new_array(nocol){
+
+    function divider(size) {
+        var i = 1;
+        var space1 = "   ";
+        var dashes = "---";
+        var pluses = "+";
+        var last = "---\n";
+        var arras = [];
+        arras.push(space1);
+        arras.push(dashes);
+        while (i <= 2*size) {
+            i++;
+            if (i == 2*size-2){
+                if(arras[i - 1] == pluses){
+                    arras.push(last)}
+
+                else {
+                    arras.push(pluses);
+                    arras.push(last)
+                }}
+            else if (i < 2*size-2){
+                if (arras[i - 1] == pluses) {
+                    arras.push(dashes);
+                }
+                else if(arras[i - 1] == dashes){
+                    arras.push(pluses);
+                }
+
+            }
+
+
+        }
+        return arras
+    }
+    function firstrow(size){
+        var i = 1;
+        var space2 = "   ";
+        var space1 = "    ";
+        var last = "\n";
+        var arras = [];
+        arras.push(space1);
+        arras.push(i.toString());
+        while (i <= 2*size) {
+            i++;//2
+            if (Number(arras[i-1]) == 10){
+                space2 = "  ";
+            }
+            else if (Number(arras[i-1]) == 99)
+                space2 = " ";
+
+            if (i == 2*size-2){
+                if(Number(arras[i - 1]) == i-2){
+                    arras.push(space2);
+                    arras.push((Number(arras[i-1])+1).toString());
+                    arras.push(last)}
+
+                else {
+                    arras.push(space2);
+                    arras.push((Number(arras[i-1])+1).toString());
+                    arras.push(last)
+                }}
+            else if (i < 2*size-2){
+                if (arras[i - 1] != space2) {
+                    arras.push(space2);
+
+                }
+                else if(arras[i - 1] == space2){
+                    arras.push((Number(arras[i-2])+1).toString());
+                }
+
+            }
+
+
+        }
+        return arras
+    }
+    function row(size,norow){
+        let arras = [];
+        arras.push(norow.toString());
+        let space1 = "     ";
+        if (norow >= 10 && norow <= 99){
+            space1 = "    ";
+        }
+        else if (norow > 99)
+            space1 = "   ";
+        arras.push(space1);
+        var space2 = "   ";
+        var last = "   \n";
+        var strip = "|";
+        var i = 1;
+
+        while (i <= 2*size) {
+            i++;
+            if (i == 2*size-2){
+                if(arras[i - 1] == strip){
+                    arras.push(last)}
+
+                else {
+                    arras.push(strip);
+                    arras.push(last)
+                }}
+            else if (i < 2*size-2){
+                if (arras[i - 1] == strip) {
+                    arras.push(space2);
+                }
+                else if(arras[i - 1] == space2 || arras[i - 1] == space1){
+                    arras.push(strip);
+                }
+
+            }
+
+
+        }
+        return arras
+
+
+
+    }
+    var i = 0;
+    var first = firstrow(nocol).join("");
+    var board = "";
+    board += first;
+    while (i < nocol){
+        i++;
+        var next = row(nocol,i).join("");
+        var div = divider(nocol).join("");
+        if (i == nocol){
+            board += next;
+        }
+        else{
+            board += next + div;
+        }
+    }
+    return board
+}
+function makeamove(row,col,board,player_id){
+    let rows = board.split("\n");
+    var col_index = rows[0].indexOf(col);
+    var row_index = 2*row-1;
+    var change_array = rows[row_index].split("");
+    if (change_array[col_index] == " "){
+        change_array[col_index] = player_id;
+    }
+    else{
+        // console.log("Error 105: Space occupied, please make another next selection!\n");
+        return rows.join("\n");
+    }
+    rows[row_index] = change_array.join("");
+    return rows.join("\n");
+
+}
+function ask (board,gameset,R,no) {
+    var players = gameset[0].Preset[1];
+    var winseq = gameset[0].Preset[2];
+    var boardsize = gameset[0].Preset[0];
+
+
+    // For even number of players
+    if (R > players-1 && players%2 == 0){
+        R = 1;
+    }
+    // For odd number of players
+    if (R > players && players%2 != 0){
+        R = 1;
+    }
+
+    var P = R+1;
+    rl.question("Player " + gameset[R]["Player" + R.toString()][1] + ": Please make a move (col row) or Q to save and quit:\n", move1 => {
+        if (move1 == "Q"){
+            rl.question("What would like to choose for the name of save:\n",Filename =>{
+                gameset[0].Preset.push(R);
+                gameset[0].Preset.push(no);
+                savetoFile(gameset,Filename);
+                rl.close()
+            });
+        }
+        else {
+            var move2 = move1.toString().split(" ");
+            var col1 = move2[0];
+            var row1 = move2[1];
+            var c = makeamove(row1, col1, board, gameset[R]["Player" + R.toString()][0]);
+            console.log(c);
+            no++;
+            gameset[R]["Player" + R.toString()].push(Number(col1), Number(row1));
+            // console.log(gameset);
+
+            if (no == boardsize * boardsize) {
+                console.log("Nobody wins!");
+                rl.close();
+            }
+            else{
+
+
+                // Assessing if Player R wins! (long version)
+                if (wincolumn(gameset[R]["Player" + R.toString()], boardsize, winseq) != undefined) {
+                    console.log("Player " + gameset[R]["Player" + R.toString()][1] + " won the game!");
+                    rl.close();
+                }
+                else if (winrow(gameset[R]["Player" + R.toString()], boardsize, winseq) != undefined) {
+                    console.log("Player " + gameset[R]["Player" + R.toString()][1] + " won the game!");
+                    rl.close();
+                }
+                else if (winpair(gameset[R]["Player" + R.toString()], boardsize, winseq) != undefined) {
+                    console.log("Player " + gameset[R]["Player" + R.toString()][1] + " won the game!");
+                    rl.close();
+                }
+                else if (P <= players) {
+                    // Asking next player to play the game
+                    rl.question("Player " + gameset[P]["Player" + P.toString()][1] + ": Please make a move (col row):\n", move1 => {
+                        if (move1 == "Q"){
+                            rl.question("What would like to choose for the name of save:\n",Filename =>{
+                                gameset[0].Preset.push(R);
+                                gameset[0].Preset.push(no);
+                                savetoFile(gameset,Filename);
+                                rl.close()
+                            });
+                        }
+                        else {
+                            var move2 = move1.toString().split(" ");
+                            var col1 = move2[0];
+                            var row1 = move2[1];
+                            var d = makeamove(row1, col1, c, gameset[P]["Player" + P.toString()][0]);
+                            console.log(d);
+                            gameset[P]["Player" + P.toString()].push(Number(col1), Number(row1));
+                            no++;
+
+                            if (no == boardsize * boardsize) {
+                                console.log("Nobody wins!");
+                                rl.close();
+                            }
+                            else{
+                                // Assessing if Player P wins! (short version)
+                                if (wincolumn(gameset[P]["Player" + P.toString()], boardsize, winseq) != undefined || winrow(gameset[P]["Player" + P.toString()], boardsize, winseq) != undefined || winpair(gameset[P]["Player" + P.toString()], boardsize, winseq) != undefined) {
+                                    console.log("Player " + gameset[P]["Player" + P.toString()][1] + " won the game!");
+                                    rl.close();
+                                }
+
+                                else {
+                                    R = R + 2;
+                                    ask(d, gameset, R, no); // what if multiple line of ask or ask player 3,4
+                                }}
+                        }});
+                }
+                else {
+                    R = R + 2;
+                    ask(c, gameset, R, no)
+                }
+            }
+        }});
+
+
+
+}
+// same column win
+function wincolumn(playerseq,boardsize,winseq){
+    var z = 0;
+    while (z <= boardsize){
+
+        var indexC = [];
+        var indexR = [];
+        if (playerseq.includes(z)){
+            var i = 0+2;
+            while (i < playerseq.length){
+                if (playerseq[i] == z){
+
+                    indexC.push(i);
+                    indexR.push(playerseq[i+1]);
+                }
+                i=i+2;
+            }
+            if (indexC.length == winseq){
+                indexR.sort();
+                var k = 0;
+                var f = 0;
+                while (k <= indexR.length){
+                    if (indexR[k]+1 == indexR[k+1]){
+                        f++;
+                    }
+                    k++;
+
+                }
+                if (f == winseq-1){
+                    return 1
+                }
+
+            }
+        }
+        z++
+    }
+
+}
+// same row win
+function winrow(playerseq,boardsize,winseq){
+    var z = 0;
+    while (z <= boardsize){
+        var indexC = [];
+        var indexR = [];
+        if (playerseq.includes(z)){
+            var i = 1+2;
+            while (i < playerseq.length){
+                if (playerseq[i] == z){
+
+                    indexR.push(i);
+                    indexC.push(playerseq[i-1]);
+                }
+                i=i+2;
+            }
+            if (indexR.length == winseq){
+                indexC.sort();
+                var k = 0;
+                var f = 0;
+                while (k <= indexC.length){
+                    if (indexC[k]+1 == indexC[k+1]){
+                        f++;
+                    }
+                    k++;
+
+                }
+                if (f == winseq-1){
+                    return 1
+                }
+
+            }
+        }
+        z++
+    }
+
+}
+// diagonal win
+function winpair(playerseq,boardsize,winseq){
+    var z = 0;
+    var indexC3 = [];
+    var indexR3 = [];
+    while (z <= boardsize){
+        if (playerseq.includes(z)){
+            var i = 0+2;
+            while (i < playerseq.length){
+                if (playerseq[i] == z && playerseq[i+1] == z){
+
+                    indexC3.push(playerseq[i]);
+                    indexR3.push(playerseq[i+1]);
+                }
+                i=i+2;
+            }
+            if (indexC3.length == winseq && indexR3.length == winseq){
+                indexR3.sort();
+                var k = 0;
+                var f = 0;
+                while (k <= indexR3.length){
+                    if (indexR3[k]+1 == indexR3[k+1] && indexC3[k]+1 == indexC3[k+1]){
+                        f++;
+                    }
+                    k++;
+
+                }
+                if (f == winseq-1){
+                    return 1
+                }
+
+
+            }
+        }
+        z++
+    }
+
+}
+function savetoFile(input,Filename) {
+    fs.writeFileSync(Filename.toString()+".txt", JSON.stringify(input));
+}
+function retracegame(board,gameset) {
+    var r = 1;
+    while (r <= gameset[0].Preset[1]){
+        var q = 2;
+        while (q < gameset[r]["Player" + r.toString()].length){
+            board = makeamove(gameset[r]["Player" + r.toString()][q+1],gameset[r]["Player" + r.toString()][q],board,gameset[r]["Player" + r.toString()][0]);
+            q=q+2;
+
+        }
+        r++;
+    }
+    return(board);
+
+}
+function playgame(players,boardsize,winseq,FileName) {
+    if (FileName != undefined) {
+        fs.readFile(path.join(__dirname,FileName+".txt"),"utf-8", (err, data) => {
+            if (err) console.error("An error occurred while opening the file!", err);
+            else
+            {
+                var gameset = JSON.parse(data);
+                var board = new_array(gameset[0].Preset[0]);
+                var R = gameset[0].Preset[3];
+                var no_moves = gameset[0].Preset[4];
+                var board2 = retracegame(board,gameset);
+                console.log(board2);
+                return ask(board2,gameset,R,no_moves);
+
+            }
+        });
+
+
+    }
+    else {
+        var board = new_array(boardsize);
+        var IDs = "XOABCDEFGHIJKLMNPQRSTUVWYZ";
+        var gameset = [{
+            Preset: [boardsize,players,winseq]
+        }];
+        for (var i=1; i <= players; i=i+1){
+            gameset.push({
+                ["Player"+i.toString()]: [IDs[i-1],i.toString()],
+            });
+        }
+        console.log(board);
+        var R = 1; // Queue for players
+        var no_moves = 0; //Counting moves
+        return ask(board,gameset,R,no_moves);
+    }
+
+
+
+
+}
+
+
+let rl = readline.createInterface(process.stdin, process.stdout);
+rl.question("Would you like to resume a saved game? (y/n):  ", input1 => {
+    if (input1 == "y"){
+        rl.question("What is the name of the save?\n", input2=>{
+            playgame(undefined,undefined,undefined,input2);
+        })
+
+    }
+    else if (input1 == "n"){
+        rl.question("Please enter the number of players:\n",input3 =>{
+            if (Number(input3) <=26 && Number(input3)>0){ //Should be bigger than 0 too
+                let players = Number(input3);
+                rl.question("Please enter the size of the board:\n",input4 =>{
+                    if (Number(input4) <= 999 && Number(input4) > 1){ // it should be bigger than 1 too
+                        let boardsize = Number(input4);
+                        rl.question("Please specify the win sequence count (Enter 3 for standard tic-tac-toe)):\n",input5 => {
+                            if (Number(input5) <= boardsize){
+                                playgame(players,boardsize,Number(input5));
+                            }
+                            else{
+                                console.log("Error 104: Winning sequence should not be bigger than the board size!");
+                                rl.close()
+                            }
+                        })
+                    }
+                    else{
+                        console.log("Error 103: Maximum size of a board is 999!");
+                        rl.close()
+                    }
+                })
+            }
+            else{
+                console.log("Error 102: Maximum number of players is 26!");
+                rl.close()
+            }
+        })
+
+    }
+    else {
+        console.log("Error 101: Please enter either y or n!");
+        rl.close()
+    }
+
+});
+
