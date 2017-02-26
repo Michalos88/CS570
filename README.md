@@ -26,12 +26,12 @@ Collection of my projects in JavaScript:
  For a new game, check to ensure that winning is possible given the criteria specified, and display an error and quit if not.
  2. Output a board in the following general format:
 
-     1   2   3
- 1     |   |
-    ---+---+---
- 2     |   |
-    ---+---+---
- 3     |   |
+       >   1   2   3
+       >1     |   |
+       >   ---+---+---
+       >2     |   |
+       >  ---+---+---
+       >3     |   |
 
  3. Repeat the following process over and over again until the user saves and quits, the game is won, or a tie occurs:
  Ask the user for a row and column number separated by spaces, or Q to quit. Put the appropriate symbol for that player in the specified spot. Players should be given the following symbols, in order: XOABCDEFGHIJKLMNPQRSTUVWYZ
