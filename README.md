@@ -28,3 +28,8 @@ Collection of my projects in JavaScript:
  3. Repeat the following process over and over again until the user saves and quits, the game is won, or a tie occurs:
  Ask the user for a row and column number separated by spaces, or Q to quit. Put the appropriate symbol for that player in the specified spot. Players should be given the following symbols, in order: XOABCDEFGHIJKLMNPQRSTUVWYZ
  If the user chooses instead to save and quit, ask them for a filename in a prompt on its own line. Then, save to that file and quit.
+ 
+4. Bouncy Bubble Sort
+ In standard bubble sort, the algorithm makes multiple passes through the list, swapping items so that the smaller value comes first and the larger value comes second.
+ Implement a "bouncing" bubble sort. In this version of bubble sort, instead of making passes through a list that starts at the beginning and runs through to the end, you should reverse the direction of each pass. That is, if the first pass starts at the beginning of the list and runs through to the end, the second pass would run from the end of the list back to the beginning, and then the third pass would start at the beginning again.
+
