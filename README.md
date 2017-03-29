@@ -1,7 +1,7 @@
 # JavaScript Projects
 Collection of my projects in JavaScript:
 
-1. FizzBuzz:
+1. **FizzBuzz**:
 
  Output numbers between 74 and 291.
  If the number is divisible by 3, output the word Buzz instead of the number.
@@ -9,7 +9,7 @@ Collection of my projects in JavaScript:
  If the number is divisible by both, output BuzzFizz to the screen instead of the number
 
 
-2. Ceasar's Cipher
+2. **Ceasar's Cipher**
 
  Deciphering a given message. It is encrypted with a Caesar Cipher.
  that increases by 2 after every 3 characters (including symbol characters, which are not encoded), starting at key = 5.
@@ -17,7 +17,7 @@ Collection of my projects in JavaScript:
  Then, it prompts the user for the name of the file, decrypt the message stored in the file,
  and then write the decrypted message to a new file called solution.txt.
 
-3. TIC-TAC-TOE
+3. **TIC-TAC-TOE**
 
  A. Ask if the player would like to resume a saved game. If yes, load game state from a text or binary file (your choice of file format).
  For a new game, ask how many players are playing as a prompt on its own line. The maximum number of players is 26.
@@ -31,12 +31,12 @@ Collection of my projects in JavaScript:
  Ask the user for a row and column number separated by spaces, or Q to quit. Put the appropriate symbol for that player in the specified spot. Players should be given the following symbols, in order: XOABCDEFGHIJKLMNPQRSTUVWYZ
  If the user chooses instead to save and quit, ask them for a filename in a prompt on its own line. Then, save to that file and quit.
  
-4. Bouncy Bubble Sort
+4. **Bouncy Bubble Sort**
 
  In standard bubble sort, the algorithm makes multiple passes through the list, swapping items so that the smaller value comes first and the larger value comes second.
  Implement a "bouncing" bubble sort. In this version of bubble sort, instead of making passes through a list that starts at the beginning and runs through to the end, you should reverse the direction of each pass. That is, if the first pass starts at the beginning of the list and runs through to the end, the second pass would run from the end of the list back to the beginning, and then the third pass would start at the beginning again.
  
-5. Reverse Polish Notation Calculator
+5. **Reverse Polish Notation Calculator**
 
  Implement the RPN calculator pseudo-code supplied in the lecture as real code. Your program must:
 
